@@ -155,7 +155,7 @@ public class Alice {
         
         System.err.println("Alice: Step 3 Executed");
 
-        // Step 4: Receive encrypted K_B (Bob's symmetric key)
+        // Step 4: Receive encrypted K_B (Bob's sym key 0x40)
         System.err.println("Alice: Step 4");
         byte[] K_B_H_data = null;
         try {
@@ -166,7 +166,7 @@ public class Alice {
         
         System.err.println("Alice: Step 4 Executed");
 
-        // Step 5: Select G (is the coin heads or tails?), and decrypt K_B.
+        // Step 5: Select G (is the coin heads or tails?),and decrypt K_B.
         System.err.println("Alice: Step 5");
         byte G = (byte)(new BigInteger(1, random).intValue());
         KeyPair K_G = G == 0 ? K_I : K_J;

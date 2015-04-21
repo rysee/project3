@@ -93,7 +93,8 @@ public class Bob {
             System.err.println("This typically occurs when Bob disconnects," + " crashes, or sends a message out of order.");
             System.exit(-4);
         }
-        switch (result) {  //Switch statement to output results of OTP
+        //Switch statement to output results of OTP
+        switch (result) {  
             case Outcome.LOSE: {
                 System.out.println("Bob: I Lose");
             } break;
@@ -115,6 +116,37 @@ public class Bob {
      * @return the outcome of the OTP: Outcome.WIN or Outcome.LOSE.
      */
     int execute() throws OTPException {
+        //Variables
+        //encoded keys for Step 3
+        X509EncodedKeySpec K_I_public_encoded;
+        X509EncodedKeySpec K_J_public_encoded;
+
+        //Store decoded version of K_I and K_J public for Step 3
+        PublicKey K_I_public;
+        PublicKey K_J_public;
+
+        //Store K_H public for Step 4
+        PublicKey K_H;
+
+        //Holder for K_B encrypted with K_H for Step 4
+        byte[] KB_KH_data = null;
+
+        //Store encrypted message from Alice and G for Step 6
+        byte[] msg_KA;
+        byte G;
+
+        //Create cipher and message holder for Step 7
+        Cipher K_M_cipher = null;
+        byte[] message;
+
+        //Store encoded K_I and K_J privates for Step 8
+        PKCS8EncodedKeySpec K_I_private_encoded;
+        PKCS8EncodedKeySpec K_J_private_encoded;
+
+        //Store decoded K_I and K_J privates for Step 8
+        PrivateKey K_I_private;
+        PrivateKey K_J_private;
+
         // Instantiate a charmap for encoding strings later
     	Charset utf8 = Charset.forName("UTF-8");
     	
@@ -136,12 +168,8 @@ public class Bob {
 
      	System.err.println("Bob: Step 2 Executed");
     	 
-     	//Step 3: Receives K_I_public and K_J_public. (Messages 0x30, 0x31)
+     	//Step 3: Receives K_I_public and K_J_public. (K_I 0x30,K_J 0x31)
     	System.err.println("Bob: Step 3 ");
-    	
-        //encoded keys
-    	X509EncodedKeySpec K_I_public_encoded;
-    	X509EncodedKeySpec K_J_public_encoded;
 
 		try {
 
@@ -151,48 +179,39 @@ public class Bob {
 		} catch (IOException e) {
             throw new OTPException("Unable to get encrypted message with K_I or K_J", e);
 		} catch (TLVException e) {
-			throw new OTPException("Unable to get encrypted message with K_I or K_J (Problem with TLV)", e);
+			throw new OTPException("Unable to get encrypted message with K_I or K_J (TLV Error)", e);
 		}
-		
-        //Store decoded version of K_I and K_J public
-		PublicKey K_I_public;
-		PublicKey K_J_public;
 		
 		try {
 			KeyFactory keyfactory = KeyFactory.getInstance("RSA");
-            //Decode K_I and K_J public
+            //Decode K_I and K_J encoded
 			K_I_public = keyfactory.generatePublic(K_I_public_encoded);
 			K_J_public = keyfactory.generatePublic(K_J_public_encoded);
 		} catch (NoSuchAlgorithmException e) {
 			throw new OTPException("RSA not available", e);
 		} catch (InvalidKeySpecException e) {
-			throw new OTPCheatException("K_I or K_J encoding cannot be deciphered", e);
+			throw new OTPCheatException("K_I_public_encoded or K_J_public_encoded cannot be deciphered", e);
 		}
 		
      	System.err.println("Bob: Step 3 Executed");
     	
-     	//Step 4: Selects K_H from K_I_public and K_J_public at random and sends K_B encrypted by K_H to Alice. (Message 0x40)
+     	//Step 4: Selects K_H from K_I_public and K_J_public at random and sends K_B encrypted by K_H to Alice 0x40. 
     	System.err.println("Bob: Step 4 ");
     	
         //H random byte==0 or byte==1
     	byte H = (byte)(new BigInteger(1, secureRandom).intValue());
-    	
-        //Store K_H public
-        PublicKey K_H;
 
         if (H==0) {
-            //Sets K_H to K_J_public if H==0
+            //K_H = K_I_public if H==0
     		K_H = K_I_public;
     	}
         else {
-            //Sets K_H to K_J_public if H==1
+            //K_H = K_J_public if H==1
         	K_H = K_J_public;
         }
-        //Creates byte array to store encrypted K_B with K_H
-        byte[] KB_KH_data = null;
         
+        //Try encrypting K_B with K_H 
         try {
-            //Encrypts K_B with K_H 
 			KB_KH_data = Common.encryptKey((RSAPublicKey) K_H, K_B, secureRandom);
 		} catch (InvalidKeyException e) {
             throw new OTPCheatException("Invalid RSA key given", e);
@@ -206,8 +225,8 @@ public class Bob {
 			throw new OTPException("NoPadding not available for RSA", e);
 		}
         
+        //Try sending K_B encrypted with K_H_public to Alice 0x40
         try {
-            //Send K_B encrypted with K_H_public as a byte array to Alice
 			out.put(0x40, KB_KH_data);
 		} catch (IOException e) {
 			throw new OTPException("Unable to send encrypted message with K_B_H", e);
@@ -218,11 +237,8 @@ public class Bob {
      	//Step 5: Performed only by Alice.
     	System.err.println("Bob: Step 5 performed by Alice");
     	
-     	//Step 6: Receive encrypted message from Alice. (Messages 0x60, 0x61)
+     	//Step 6: Receive encrypted message from Alice. (msg_KA 0x60, G 0x61)
     	System.err.println("Bob: Step 6 ");
-    	
-    	byte[] msg_KA;
-    	byte G;
     	
     	try {
             //Receive encrypted message from Alice
@@ -240,8 +256,6 @@ public class Bob {
      	//Step 7: Decrypts message M from Alice and sends M and H to Alice. (Messages 0x70, 0x71)
     	System.err.println("Bob: Step 7 ");
     	
-    	Cipher K_M_cipher = null;
-    	byte[] message;
     	 try {
             //Sets up cipher
              K_M_cipher = Cipher.getInstance("AES/ECB/NoPadding");
@@ -274,10 +288,6 @@ public class Bob {
          
       	//Step 8: Receives K_I_private and K_J_private for verification purposes. (Messages 0x80, 0x81)
     	System.err.println("Bob: Step 8 ");
-    	
-        //Store encoded K_I and K_J privates
-    	PKCS8EncodedKeySpec K_I_private_encoded;
-    	PKCS8EncodedKeySpec K_J_private_encoded;
 
     	try {
             //Receive encoded K_I and K_J private to verify
@@ -288,11 +298,7 @@ public class Bob {
 		} catch (IOException e) {
 			throw new OTPException("Unable to get  K_I_private_encoded or K_J_private_encoded", e);
 		}
-    	
-        //Store decoded K_I and K_J privates
-		PrivateKey K_I_private;
-		PrivateKey K_J_private;
-    	
+    	    	
 		try {
 			KeyFactory keyfactory = KeyFactory.getInstance("RSA");
             //Decode K_I and K_J private
