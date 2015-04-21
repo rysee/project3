@@ -195,7 +195,8 @@ public class Bob {
 		
      	System.err.println("Bob: Step 3 Executed");
     	
-     	//Step 4: Selects K_H from K_I_public and K_J_public at random and sends K_B encrypted by K_H to Alice 0x40. 
+     	//Step 4: Selects K_H from K_I_public and K_J_public at random 
+        //sends K_B encrypted by K_H to Alice 0x40. 
     	System.err.println("Bob: Step 4 ");
     	
         //H random byte==0 or byte==1
