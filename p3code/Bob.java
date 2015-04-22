@@ -147,6 +147,10 @@ public class Bob {
         PrivateKey K_I_private;
         PrivateKey K_J_private;
 
+        //Key checker
+        Key K_I_checker;
+        Key K_J_checker;
+
         // Instantiate a charmap for encoding strings later
     	Charset utf8 = Charset.forName("UTF-8");
     	
@@ -202,10 +206,12 @@ public class Bob {
         //H random byte==0 or byte==1
     	byte H = (byte)(new BigInteger(1, secureRandom).intValue());
 
+        //if random 0
         if (H==0) {
             //K_H = K_I_public if H==0
     		K_H = K_I_public;
     	}
+        //else 1
         else {
             //K_H = K_J_public if H==1
         	K_H = K_J_public;
@@ -244,7 +250,7 @@ public class Bob {
     	try {
             //Receive encrypted message from Alice
 			msg_KA = in.get(0x60);
-            //Receive the result of the coin flip from ALice
+            //Receive G from Alice
 			G = in.getByte(0x61);
 		} catch (TLVException e) {
 			throw new OTPException("Unable to get encrypted message K_A or byte G (Problem with TLV)", e);
@@ -254,15 +260,16 @@ public class Bob {
     	
      	System.err.println("Bob: Step 6 Executed");
     	
-     	//Step 7: Decrypts message M from Alice and sends M and H to Alice. (Messages 0x70, 0x71)
+     	//Step 7: Decrypts message from Alice and sends message and H to Alice. (message 0x70, H 0x71)
     	System.err.println("Bob: Step 7 ");
     	
     	 try {
             //Sets up cipher
              K_M_cipher = Cipher.getInstance("AES/ECB/NoPadding");
-            //Sets cipher to decrypt with K_B
+            //Cipher to decrypt with K_B
              K_M_cipher.init(Cipher.DECRYPT_MODE, K_B);
-            //Tries decrypting the msg_KA with K_B; wins if successful
+            //Trys decrypting the msg_KA with K_B
+            //wins if successful
              message = K_M_cipher.doFinal(msg_KA);
          } catch (NoSuchAlgorithmException e) {
              throw new OTPException("AES not available", e);
@@ -287,7 +294,7 @@ public class Bob {
     	
       	System.err.println("Bob: Step 7 Executed");
          
-      	//Step 8: Receives K_I_private and K_J_private for verification purposes. (Messages 0x80, 0x81)
+      	//Step 8: Receives K_I_private and K_J_private for verification purposes. (K_I 0x80, K_J 0x81)
     	System.err.println("Bob: Step 8 ");
 
     	try {
@@ -313,11 +320,15 @@ public class Bob {
 		
      	System.err.println("Bob: Step 8 Executed");
 		
-     	// Interpret the result
+     	//Interpreting the result
 		try {
+            //checkers for K_I and K_J
+            K_I_checker = Common.decryptKey((RSAPrivateKey)K_I_private, KB_KH_data);
+            K_J_checker = Common.decryptKey((RSAPrivateKey)K_J_private, KB_KH_data);
+            
             //Test K_I_private and K_J_private for validity by trying do decrypt KB_KH_data from step 4
-			if (!(K_B.equals((Common.decryptKey((RSAPrivateKey)K_I_private, KB_KH_data))) || (K_B.equals((Common.decryptKey((RSAPrivateKey)K_J_private, KB_KH_data)))))) { 
-				throw new OTPCheatException("Bob: Both private keys provided could not decrypt {K_B}K_H_public");
+            if (!(K_B.equals(K_I_checker) || K_B.equals(K_J_checker))) { 
+				throw new OTPCheatException("Bob: Both private keys provided could not decrypt KB_KH_data");
 			}
 			//Check if both public keys are the same
 			else if (K_I_public.equals(K_J_public)) {
