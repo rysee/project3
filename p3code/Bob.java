@@ -317,7 +317,7 @@ public class Bob {
 		try {
             //Test K_I_private and K_J_private for validity by trying do decrypt KB_KH_data from step 4
 			if (!(K_B.equals((Common.decryptKey((RSAPrivateKey)K_I_private, KB_KH_data))) || (K_B.equals((Common.decryptKey((RSAPrivateKey)K_J_private, KB_KH_data)))))) { 
-				throw new OTPCheatException("Bob: Both public keys provided could not decrypt {K_B}K_H_public");
+				throw new OTPCheatException("Bob: Both private keys provided could not decrypt {K_B}K_H_public");
 			}
 			//Check if both public keys are the same
 			else if (K_I_public.equals(K_J_public)) {
