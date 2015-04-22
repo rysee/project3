@@ -314,39 +314,38 @@ public class Bob {
      	System.err.println("Bob: Step 8 Executed");
 		
      	// Interpret the result
-		
-        if (H == G) {
-			return Outcome.WIN;
-		}
-		else {
-			try {
-				if (!(K_B.equals((Common.decryptKey((RSAPrivateKey)K_I_private, KB_KH_data))) || (K_B.equals((Common.decryptKey((RSAPrivateKey)K_J_private, KB_KH_data)))))) {  //Test K_I_private and K_J_private for validity by trying do decrypt KB_KH_data from step 4
-					throw new OTPCheatException("Bob: Neither K_I_public or K_J_public provided could decrypt {K_B}K_H_public");
-				}
-				
-				else if (K_I_public.equals(K_J_public)) {
-					throw new OTPCheatException("Bob: Both K_I_public and K_J_public are the same");
-				}
-				
-				else if (K_I_private.equals(K_J_private)) {
-					throw new OTPCheatException("Bob: Both K_I_private and K_J_private are the same");
-				}
-				
-				else if (K_I_private.equals(K_I_public)) {
-					throw new OTPCheatException("Bob: Both K_I_private and K_I_public are the same");
-				}
-				
-				else if (K_J_private.equals(K_J_public)) {
-					throw new OTPCheatException("Bob: Both K_J_private and K_J_public are the same");
-				} 
-				else {
-					return Outcome.LOSE;
-				}
-			} catch (InvalidKeyException |IllegalBlockSizeException | BadPaddingException e) {
-				throw new OTPException("Key during check of K_I and K_J");
-			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-				throw new OTPException("Method error during check of K_I and K_J");
+		try {
+            //Test K_I_private and K_J_private for validity by trying do decrypt KB_KH_data from step 4
+			if (!(K_B.equals((Common.decryptKey((RSAPrivateKey)K_I_private, KB_KH_data))) || (K_B.equals((Common.decryptKey((RSAPrivateKey)K_J_private, KB_KH_data)))))) { 
+				throw new OTPCheatException("Bob: Both public keys provided could not decrypt {K_B}K_H_public");
 			}
+			//Check if both public keys are the same
+			else if (K_I_public.equals(K_J_public)) {
+				throw new OTPCheatException("Bob: Both public keys I and J are the same");
+			}
+			//Checks if both private keys are the same
+			else if (K_I_private.equals(K_J_private)) {
+				throw new OTPCheatException("Bob: Both private keys I and J are the same");
+			}
+			//Checks if public and private keypair I are the same
+			else if (K_I_private.equals(K_I_public)) {
+				throw new OTPCheatException("Bob: Public and Private KeyPair I are the same");
+			}
+			//Checks if public and private keypair J are the same
+			else if (K_J_private.equals(K_J_public)) {
+				throw new OTPCheatException("Bob: Public and Private keypair J are the same");
+            //If H==G Win!
+			} else if ( H==G) {
+                return Outcome.WIN;
+            }
+            //Else Lose
+			else {
+				return Outcome.LOSE;
+			}
+		} catch (InvalidKeyException |IllegalBlockSizeException | BadPaddingException e) {
+			throw new OTPException("Key during check of K_I and K_J");
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			throw new OTPException("Method error during check of K_I and K_J");
 		}
     }
 
