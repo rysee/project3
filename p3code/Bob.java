@@ -70,6 +70,7 @@ public class Bob {
         	InetAddress address = InetAddress.getByName("127.0.0.1"); 
         	//Creates new socket
             Socket c = new Socket(address, 8023);
+            System.err.println("Connected.");
             //Creates input and output for Bob
             Bob sideB = new Bob(c.getInputStream(), c.getOutputStream());
             //Execs Bob's OTP
@@ -155,7 +156,6 @@ public class Bob {
     	Charset utf8 = Charset.forName("UTF-8");
     	
     	//Step 1: Performed only by Alice.
-        System.err.println();
         System.err.println("Bob: Step 1 Performed by Alice");
     	
     	
