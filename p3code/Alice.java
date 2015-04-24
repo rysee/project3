@@ -262,8 +262,21 @@ public class Alice {
             }
         }
     }
-    
-    private String Msg = "I lose. ~Alice:("; //length must be a multiple of 16
+     
+    //random string for Msg
+    String randMsg(int nChar) {
+        SecureRandom rand = new SecureRandom();
+        char[] charBank = "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz".toCharArray();
+        char[] randCharArray = new char[nChar]; 
+        for(int i = 0; i < nChar; i++){
+            randCharArray[i] = charBank[rand.nextInt(charBank.length)];
+        }
+        return new String(randCharArray);
+    }
+
+    //random string for Msg
+    //length must be multiple of 16
+    private String Msg = randMsg(16);
     private TLVInputStream in;
     private TLVOutputStream out;
     private SecureRandom random = new SecureRandom();
