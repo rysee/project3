@@ -56,12 +56,17 @@ public class Common {
         Cipher c = Cipher.getInstance("RSA/ECB/NoPadding");
         c.init(Cipher.ENCRYPT_MODE, K_u);
         byte[] K_data = K.getEncoded();
-        int block_len = (K_u.getModulus().bitLength() + 7) / 8;
+        int block_len = (K_u.getModulus().bitLength() - 1) / 8;
         byte[] plain_key = new byte[block_len];
+        r.nextBytes(plain_key);
         for (int i = 0; i < K_data.length; i++) {
             plain_key[block_len - K_data.length + i] = K_data[i];
         }
-        ByteBuffer data = ByteBuffer.allocate(2 + block_len);
+        ByteBuffer data = ByteBuffer.allocate(3 + block_len);
+        
+        // Common.printData(plain_key);
+        // System.out.println();
+        
         data.putShort((short)K_data.length);
         data.put(c.doFinal(plain_key));
         return data.array();
