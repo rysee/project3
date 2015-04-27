@@ -265,32 +265,32 @@ public class Bob {
     	
     	 try {
             //Sets up cipher
-             K_M_cipher = Cipher.getInstance("AES/ECB/NoPadding");
+            K_M_cipher = Cipher.getInstance("AES/ECB/NoPadding");
             //Cipher to decrypt with K_B
-             K_M_cipher.init(Cipher.DECRYPT_MODE, K_B);
+            K_M_cipher.init(Cipher.DECRYPT_MODE, K_B);
             //Trys decrypting the msg_KA with K_B
             //wins if successful
-             message = K_M_cipher.doFinal(msg_KA);
-         } catch (NoSuchAlgorithmException e) {
-             throw new OTPException("AES not available", e);
-         } catch (NoSuchPaddingException e) {
-             throw new OTPException("NoPadding not available for AES", e);
-         } catch (InvalidKeyException e) {
-             throw new OTPCheatException("Invalid AES key given", e);
-         } catch (IllegalBlockSizeException e) {
-             throw new OTPException("Message must be 16*n bytes in length", e);
+            message = K_M_cipher.doFinal(msg_KA);
+        } catch (NoSuchAlgorithmException e) {
+            throw new OTPCheatException("AES not available", e);
+        } catch (NoSuchPaddingException e) {
+            throw new OTPCheatException("NoPadding not available for AES", e);
+        } catch (InvalidKeyException e) {
+            throw new OTPCheatException("Invalid AES key given", e);
+        } catch (IllegalBlockSizeException e) {
+            throw new OTPCheatException("Message must be 16*n bytes in length", e);
 		} catch (BadPaddingException e) {
-            throw new OTPException("Internal error", e);
+            throw new OTPCheatException("Internal error", e);
 		}
     	
-         try {
+        try {
             //Send Alice decrypted message
-             out.put(0x70, message);
+            out.put(0x70, message);
             //Sends Bob's call (H)
-             out.putByte(0x71, H);
-         } catch (IOException e) {
-             throw new OTPException("Unable to send message or byte H", e);
-         }
+            out.putByte(0x71, H);
+        } catch (IOException e) {
+            throw new OTPException("Unable to send message or byte H", e);
+        }
     	
       	System.err.println("Bob: Step 7 Executed");
          

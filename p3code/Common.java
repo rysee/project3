@@ -64,8 +64,9 @@ public class Common {
         }
         ByteBuffer data = ByteBuffer.allocate(3 + block_len);
         
+        // System.out.println("****************Encrypt*******************");
         // Common.printData(plain_key);
-        // System.out.println();
+        // System.out.println("****************Encrypt*******************");
         
         data.putShort((short)K_data.length);
         data.put(c.doFinal(plain_key));
@@ -93,6 +94,11 @@ public class Common {
         Cipher c = Cipher.getInstance("RSA/ECB/NoPadding");
         c.init(Cipher.DECRYPT_MODE, K_r);
         byte[] plain_key = c.doFinal(crypt_key);
+
+        // System.out.println("****************Decrypt*******************");
+        // Common.printData(plain_key);
+        // System.out.println("****************Dcerypt*******************");
+        
         byte[] K_data = new byte[K_data_len];
         for (int i = 0; i < K_data_len; i++) {
             K_data[i] = plain_key[plain_key.length - K_data.length + i];
