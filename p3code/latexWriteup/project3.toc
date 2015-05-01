@@ -1,5 +1,9 @@
 \contentsline {section}{Introduction}{3}
 \contentsline {section}{Methodology}{3}
+\contentsline {subsection}{Oblivious Transfer Protocol Implementation}{3}
+\contentsline {subsection}{Code Analysis for Flaws}{3}
 \contentsline {section}{Protocol and Cheat Overview}{3}
+\contentsline {subsection}{Protocol Overview}{3}
+\contentsline {subsection}{Cheat Overview}{3}
 \contentsline {section}{Implementation}{3}
 \contentsline {section}{Sample Inputs and Outputs}{3}

@@ -201,18 +201,38 @@ scenarios in which the other party attempts to cheat.
 %----------------------------------------------------------------------------------------
 
 \section{Methodology}
+\subsection{Oblivious Transfer Protocol Implementation}
+To implement the OTP, we looked at the diagram included with the project and went through it step by step. By looking at the code already completed for Alice's portion of it and the help from the diagram, we were able to successfully figure out how to implement the OTP.
+
+\subsection{Code Analysis for Flaws}
+To try to stop Alice from cheating, we looked at the OTP implementation as if we were trying to exploit it ourselves. We looked for places we could have sent faulty information or leveraged known information to produce a desired output.  
 
 %----------------------------------------------------------------------------------------
 %	Protocol and Cheat Overview
 %----------------------------------------------------------------------------------------
 
 \section{Protocol and Cheat Overview}
+\subsection{Protocol Overview}
+In Common.java, the encryptKey algorithm was flawed. The algorithm was not inserting random bytes correctly. We fixed this by adjusting the block length so it would be correct and adjusted the secureRandom to randomize the key.
+
+\subsection{Cheat Overview}
+Some of the various checks against cheating we performed are:
+\begin{itemize}
+\item If both private and public key pairs are the same
+\item If both public keys sent are the same
+\item If both private keys are the same
+\item If the private key actually decrypts the information
+\item If the keys are formatted as anticipated
+\end{itemize}
+
 
 %----------------------------------------------------------------------------------------
 %	Implementation
 %----------------------------------------------------------------------------------------
 
 \section{Implementation}
+
+
 
 %----------------------------------------------------------------------------------------
 %	Sample Inputs and Outputs

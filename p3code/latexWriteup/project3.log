@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  1 MAY 2015 13:01
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  1 MAY 2015 14:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -216,18 +216,33 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 [1
 
 {/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-(./project3.toc)
+(./project3.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 3.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 3.
+)
 \tf@toc=\write3
 \openout3 = `project3.toc'.
 
- [2] 
+ [2]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 221.
+
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 221.
+
+
 AED: lastpage setting LastPage
 [3] (./project3.aux) ) 
 Here is how much of TeX's memory you used:
- 3377 strings out of 493315
- 49152 string characters out of 6137904
- 217312 words of memory out of 5000000
- 6794 multiletter control sequences out of 15000+600000
+ 3396 strings out of 493315
+ 49482 string characters out of 6137904
+ 220312 words of memory out of 5000000
+ 6810 multiletter control sequences out of 15000+600000
  8202 words of font info for 29 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  38i,11n,43p,291b,236s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -235,11 +250,12 @@ Here is how much of TeX's memory you used:
 sfonts/cm/cmbx10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/ams
 fonts/cm/cmbx12.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsf
 onts/cm/cmr10.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmr12.pfb>
-Output written on project3.pdf (3 pages, 56843 bytes).
+ts/cm/cmr12.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmsy10.pfb>
+Output written on project3.pdf (3 pages, 68510 bytes).
 PDF statistics:
- 30 PDF objects out of 1000 (max. 8388607)
- 20 compressed objects within 1 object stream
+ 34 PDF objects out of 1000 (max. 8388607)
+ 23 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -353,7 +353,7 @@ public class Bob {
 			else {
 				return Outcome.LOSE;
 			}
-		} catch (InvalidKeyException |IllegalBlockSizeException | BadPaddingException e) {
+		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			throw new OTPException("Key during check of K_I and K_J");
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			throw new OTPException("Method error during check of K_I and K_J");
